@@ -42,6 +42,7 @@ int main(int argc, char *argv[]) {
   int loopback = 0;
   double speed = 1;
   int ttl = -1;
+  int broadcast = 1;
 
   int opt;
   while ((opt = getopt(argc, argv, "i:ls:t:")) != -1) {
@@ -76,6 +77,10 @@ int main(int argc, char *argv[]) {
   if (fd == -1) {
     std::cerr << "socket: " << strerror(errno) << std::endl;
     return 1;
+  }
+
+  if (setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) == -1) {
+      exit(1);
   }
 
   if (ifindex != 0) {
